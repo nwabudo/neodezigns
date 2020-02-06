@@ -16,4 +16,9 @@ public class NeoDezignsApplication {
 	public BCryptPasswordEncoder bCryptPassword() {
 		return new BCryptPasswordEncoder();
 	}
+	
+	@Bean
+	public SpringApplicationContext springApplicationContext() {
+		return new SpringApplicationContext(); 
+	}
 }

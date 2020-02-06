@@ -8,7 +8,7 @@ public class UserRest {
 	private String userId;
 	private String firstName;
 	private String lastName;
-	private String email;
+	private String userName;
 	private List<Integer> date = new ArrayList<>();
 
 	public String getUserId() {
@@ -35,12 +35,12 @@ public class UserRest {
 		this.lastName = lastName;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public List<Integer> getDate() {
@@ -50,5 +50,5 @@ public class UserRest {
 	public void setDate(List<Integer> date) {
 		this.date = date;
 	}
-	
+
 }

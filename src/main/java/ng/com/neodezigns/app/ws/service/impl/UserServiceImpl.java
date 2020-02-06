@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import ng.com.neodezigns.app.ws.custom.CustomMethods;
 import ng.com.neodezigns.app.ws.io.entity.UserEntity;
-import ng.com.neodezigns.app.ws.repository.UserRepository;
+import ng.com.neodezigns.app.ws.io.repositories.UserRepository;
 import ng.com.neodezigns.app.ws.service.UserService;
 import ng.com.neodezigns.app.ws.shared.Utils;
 import ng.com.neodezigns.app.ws.shared.dto.UserDTO;
@@ -67,17 +67,35 @@ public class UserServiceImpl implements UserService {
 		}
 		
 	}
-
+	/*
+	 * @Override public UserDetails loadUserByUsername(String email) throws
+	 * UsernameNotFoundException { UserDetails userDetails = null; UserEntity
+	 * userEntity = userRepo.findByEmail(email); if (userEntity == null) throw new
+	 * UsernameNotFoundException(email);
+	 * 
+	 * userDetails = new User(userEntity.getEmail(),
+	 * userEntity.getEncryptedPassword(), new ArrayList<>());
+	 * log.info(userDetails.toString() + "[" + userEntity.getEmail() +
+	 * userEntity.getEncryptedPassword() + "]"); return userDetails; }
+	 */
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		UserDetails userDetails = null;
-		UserEntity userEntity = userRepo.findByEmail(email);
+		UserEntity userEntity = userRepo.findByUserName(userName);
 		if (userEntity == null)
-			throw new UsernameNotFoundException(email);
+			throw new UsernameNotFoundException(userName);
 
-		userDetails = new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
-		log.info(userDetails.toString() + "[" + userEntity.getEmail() + userEntity.getEncryptedPassword() + "]");
+		userDetails = new User(userEntity.getUserName(), userEntity.getEncryptedPassword(), new ArrayList<>());
+		log.info(userDetails.toString() + "[" + userEntity.getUserName() + userEntity.getEncryptedPassword() + "]");
 		return userDetails;
 	}
-
+	@Override
+	public UserDTO getUser(String userName) {
+		UserEntity userEntity = userRepo.findByUserName(userName);
+		if (userEntity == null)
+			throw new UsernameNotFoundException(userName);
+		UserDTO returnvalue = new UserDTO();
+		BeanUtils.copyProperties(userEntity, returnvalue);
+		return returnvalue;
+	}
 }

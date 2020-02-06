@@ -1,4 +1,4 @@
-package ng.com.neodezigns.app.ws.repository;
+package ng.com.neodezigns.app.ws.io.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
