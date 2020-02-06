@@ -6,8 +6,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class CustomMethods {
+import org.springframework.stereotype.Component;
 
+import ng.com.neodezigns.app.ws.io.entity.UserEntity;
+
+@Component
+public class CustomMethods {
+	
 	public static Date parseDateFromArray(final ArrayList<Integer> array) throws ParseException {
 		final GregorianCalendar calendar = new GregorianCalendar(array.get(0), array.get(1), array.get(2));
 		final SimpleDateFormat format = new SimpleDateFormat("dd MMMM yyyy");
@@ -25,5 +30,13 @@ public class CustomMethods {
 		System.out.println(l);
 		return l;
 
+	}
+	
+	public String generateUserName(UserEntity user) {
+		String userName = "";
+		String[] partName = user.getEmail().split("@");
+		userName += partName[0].trim();
+		//StringBuilder sb = new StringBuilder();
+		return userName;
 	}
 }

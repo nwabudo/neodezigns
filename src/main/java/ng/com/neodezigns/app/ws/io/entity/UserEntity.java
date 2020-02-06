@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.Pattern;
 
 @Entity(name = "users")
 public class UserEntity implements Serializable {
@@ -26,8 +27,13 @@ public class UserEntity implements Serializable {
 	@Column(nullable = false, length = 50)
 	private String lastName;
 
-	@Column(nullable = false, length = 120)
+	@Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\." + "[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
+			+ "(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "{invalid.email}")
+	@Column(nullable = false, length = 80)
 	private String email;
+
+	@Column(nullable = false, length = 50)
+	private String userName;
 
 	@Column(nullable = false, length = 100)
 	private String encryptedPassword;
@@ -36,7 +42,7 @@ public class UserEntity implements Serializable {
 
 	@Column(nullable = false)
 	private Boolean emailVerificationStatus = false;
-	
+
 	@Column(nullable = false)
 	private Date createdAt;
 
@@ -85,6 +91,14 @@ public class UserEntity implements Serializable {
 		this.email = email;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public String getEncryptedPassword() {
 		return encryptedPassword;
 	}
@@ -108,10 +122,11 @@ public class UserEntity implements Serializable {
 	public void setEmailVerificationStatus(Boolean emailVerificationStatus) {
 		this.emailVerificationStatus = emailVerificationStatus;
 	}
-	
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
+
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
