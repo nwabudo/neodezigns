@@ -6,6 +6,7 @@ import ng.com.neodezigns.app.ws.shared.dto.UserDTO;
 
 public interface UserService extends UserDetailsService {
 
-	UserDTO createdUser(UserDTO userDTO);
-	UserDTO getUser(String userName);
+	UserDTO createNewUser(UserDTO userDTO);
+	UserDTO getUserByUserName(String userName);
+	UserDTO getUserByUserID(String userId);
 }

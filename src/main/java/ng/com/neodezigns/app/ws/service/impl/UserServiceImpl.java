@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
 	private static Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
-	public UserDTO createdUser(UserDTO userDTO) {
+	public UserDTO createNewUser(UserDTO userDTO) {
 
 		try {
 			UserEntity user = new UserEntity();
@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
 			if (userRepo.findByUserName(userName) != null) {
 				userName += user.getFirstName().substring(0, 1).toUpperCase();
 			}
+
 			user.setUserName(userName);
 			if (userRepo.findByEmail(user.getEmail()) != null)
 				throw new RuntimeException("Record Already Exists");
@@ -65,19 +66,8 @@ public class UserServiceImpl implements UserService {
 			log.info("Error is: " + ex.getMessage() + "/ " + ex.getConstraintViolations());
 			throw new RuntimeException("Email is not valid");
 		}
-		
 	}
-	/*
-	 * @Override public UserDetails loadUserByUsername(String email) throws
-	 * UsernameNotFoundException { UserDetails userDetails = null; UserEntity
-	 * userEntity = userRepo.findByEmail(email); if (userEntity == null) throw new
-	 * UsernameNotFoundException(email);
-	 * 
-	 * userDetails = new User(userEntity.getEmail(),
-	 * userEntity.getEncryptedPassword(), new ArrayList<>());
-	 * log.info(userDetails.toString() + "[" + userEntity.getEmail() +
-	 * userEntity.getEncryptedPassword() + "]"); return userDetails; }
-	 */
+
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		UserDetails userDetails = null;
@@ -89,11 +79,22 @@ public class UserServiceImpl implements UserService {
 		log.info(userDetails.toString() + "[" + userEntity.getUserName() + userEntity.getEncryptedPassword() + "]");
 		return userDetails;
 	}
+
 	@Override
-	public UserDTO getUser(String userName) {
+	public UserDTO getUserByUserName(String userName) {
 		UserEntity userEntity = userRepo.findByUserName(userName);
 		if (userEntity == null)
 			throw new UsernameNotFoundException(userName);
+		UserDTO returnvalue = new UserDTO();
+		BeanUtils.copyProperties(userEntity, returnvalue);
+		return returnvalue;
+	}
+
+	@Override
+	public UserDTO getUserByUserID(String userId) {
+		UserEntity userEntity = userRepo.findByUserId(userId);
+		if (userEntity == null)
+			throw new UsernameNotFoundException(userId + " not Found");
 		UserDTO returnvalue = new UserDTO();
 		BeanUtils.copyProperties(userEntity, returnvalue);
 		return returnvalue;
