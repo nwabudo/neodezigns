@@ -1,7 +1,10 @@
 package ng.com.neodezigns.app.ws.ui.models.response;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import ng.com.neodezigns.app.ws.custom.CustomMethods;
 
 public class UserRest {
 
@@ -47,8 +50,7 @@ public class UserRest {
 		return date;
 	}
 
-	public void setDate(List<Integer> date) {
-		this.date = date;
+	public void setDate(Date date) {
+		this.date = CustomMethods.parseDateToArray(date);
 	}
-
 }

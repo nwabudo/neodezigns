@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ng.com.neodezigns.app.ws.custom.CustomMethods;
 import ng.com.neodezigns.app.ws.exceptions.UserServiceException;
 import ng.com.neodezigns.app.ws.service.UserService;
 import ng.com.neodezigns.app.ws.shared.dto.UserDTO;
+import ng.com.neodezigns.app.ws.ui.models.request.RequestOperationName;
 import ng.com.neodezigns.app.ws.ui.models.request.UserRequestDetails;
 import ng.com.neodezigns.app.ws.ui.models.response.ErrorMessages;
+import ng.com.neodezigns.app.ws.ui.models.response.RequestOperationStatus;
+import ng.com.neodezigns.app.ws.ui.models.response.ResponseStatus;
 import ng.com.neodezigns.app.ws.ui.models.response.UserRest;
 
 @RestController
@@ -35,7 +37,7 @@ public class UserController {
 		for (UserDTO source : userDTOs) {
 			UserRest target = new UserRest();
 			BeanUtils.copyProperties(source, target);
-			target.setDate(CustomMethods.parseDateToArray(source.getCreatedAt()));
+			target.setDate(source.getCreatedAt());
 			userRest.add(target);
 		}
 		return userRest;
@@ -48,7 +50,7 @@ public class UserController {
 		UserDTO userDTO = new UserDTO();
 		userDTO = userService.getUserByUserID(userId);
 		BeanUtils.copyProperties(userDTO, userRest);
-		userRest.setDate(CustomMethods.parseDateToArray(userDTO.getCreatedAt()));
+		userRest.setDate(userDTO.getCreatedAt());
 		return userRest;
 	}
 
@@ -65,7 +67,7 @@ public class UserController {
 		BeanUtils.copyProperties(userRequest, userDTO);
 		UserDTO createdUser = userService.createNewUser(userDTO);
 		BeanUtils.copyProperties(createdUser, user);
-		user.setDate(CustomMethods.parseDateToArray(createdUser.getCreatedAt()));
+		user.setDate(createdUser.getCreatedAt());
 		return user;
 	}
 
@@ -79,14 +81,18 @@ public class UserController {
 		BeanUtils.copyProperties(userRequest, userDTO);
 		UserDTO createdUser = userService.updateUser(userDTO, userId);
 		BeanUtils.copyProperties(createdUser, user);
-		user.setDate(CustomMethods.parseDateToArray(createdUser.getCreatedAt()));
+		user.setDate(createdUser.getCreatedAt());
 		return user;
 	}
 
-	@RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
-	public String deleteUser(@PathVariable String userId) {
-		
-		return "delete User was Called";
+	@RequestMapping(value = "/{userId}", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE })
+	public ResponseStatus deleteUser(@PathVariable String userId) {
+		ResponseStatus returnValue = new ResponseStatus();
+		returnValue.setOperationName(RequestOperationName.DELETE.name());
+		userService.deleteUser(userId);
+		returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+		return returnValue;
 	}
 
 }

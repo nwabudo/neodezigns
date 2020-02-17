@@ -123,4 +123,11 @@ public class UserServiceImpl implements UserService {
 		return returnvalue;
 	}
 
+	@Override
+	public void deleteUser(String userId) {
+		UserEntity userEntity = userRepo.findByUserId(userId);
+		if (userEntity == null)
+			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + " for: " + userId);
+		userRepo.delete(userEntity);
+	}
 }
