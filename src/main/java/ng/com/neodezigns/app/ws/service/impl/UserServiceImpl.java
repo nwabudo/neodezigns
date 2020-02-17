@@ -1,6 +1,7 @@
 package ng.com.neodezigns.app.ws.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
@@ -15,11 +16,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ng.com.neodezigns.app.ws.custom.CustomMethods;
+import ng.com.neodezigns.app.ws.exceptions.UserServiceException;
 import ng.com.neodezigns.app.ws.io.entity.UserEntity;
 import ng.com.neodezigns.app.ws.io.repositories.UserRepository;
 import ng.com.neodezigns.app.ws.service.UserService;
 import ng.com.neodezigns.app.ws.shared.Utils;
 import ng.com.neodezigns.app.ws.shared.dto.UserDTO;
+import ng.com.neodezigns.app.ws.ui.models.response.ErrorMessages;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -37,6 +40,17 @@ public class UserServiceImpl implements UserService {
 	BCryptPasswordEncoder bCryptPassword;
 
 	private static Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
+	public List<UserDTO> getAllUsers() {
+		List<UserEntity> users = (List<UserEntity>) userRepo.findAll();
+		List<UserDTO> returnvalue = new ArrayList<>();
+		for (UserEntity source : users) {
+			UserDTO target = new UserDTO();
+			BeanUtils.copyProperties(source, target);
+			returnvalue.add(target);
+		}
+		return returnvalue;
+	}
 
 	public UserDTO createNewUser(UserDTO userDTO) {
 
@@ -56,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
 			user.setUserName(userName);
 			if (userRepo.findByEmail(user.getEmail()) != null)
-				throw new RuntimeException("Record Already Exists");
+				throw new UserServiceException(ErrorMessages.RECORD_ALREADY_EXISTS + " for: " + user.getEmail());
 
 			UserEntity storedUserDetails = userRepo.save(user);
 			UserDTO returnValue = new UserDTO();
@@ -68,19 +82,17 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		UserDetails userDetails = null;
 		UserEntity userEntity = userRepo.findByUserName(userName);
 		if (userEntity == null)
-			throw new UsernameNotFoundException(userName);
+			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + " for: " + userName);
 
 		userDetails = new User(userEntity.getUserName(), userEntity.getEncryptedPassword(), new ArrayList<>());
 		log.info(userDetails.toString() + "[" + userEntity.getUserName() + userEntity.getEncryptedPassword() + "]");
 		return userDetails;
 	}
 
-	@Override
 	public UserDTO getUserByUserName(String userName) {
 		UserEntity userEntity = userRepo.findByUserName(userName);
 		if (userEntity == null)
@@ -90,7 +102,6 @@ public class UserServiceImpl implements UserService {
 		return returnvalue;
 	}
 
-	@Override
 	public UserDTO getUserByUserID(String userId) {
 		UserEntity userEntity = userRepo.findByUserId(userId);
 		if (userEntity == null)
@@ -99,4 +110,17 @@ public class UserServiceImpl implements UserService {
 		BeanUtils.copyProperties(userEntity, returnvalue);
 		return returnvalue;
 	}
+
+	public UserDTO updateUser(UserDTO userDTO, String userId) {
+		UserDTO returnvalue = new UserDTO();
+		UserEntity userEntity = userRepo.findByUserId(userId);
+		if (userEntity == null)
+			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + " for: " + userId);
+		userEntity.setFirstName(userDTO.getFirstName());
+		userEntity.setLastName(userDTO.getLastName());
+		UserEntity updatedUser = userRepo.save(userEntity);
+		BeanUtils.copyProperties(updatedUser, returnvalue);
+		return returnvalue;
+	}
+
 }

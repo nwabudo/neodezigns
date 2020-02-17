@@ -63,6 +63,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 		response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
 		response.addHeader("UserID", userDTO.getUserId());
-		System.out.println(response.getHeaderNames());
+		log.info(response.getHeaderNames().toString());
 	}
 }

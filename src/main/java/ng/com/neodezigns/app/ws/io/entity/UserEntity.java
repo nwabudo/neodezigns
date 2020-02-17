@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.Pattern;
 
-@Entity(name = "users")
+@Entity(name = "Users")
 public class UserEntity implements Serializable {
 
 	private static final long serialVersionUID = -2675537776836756234L;
@@ -29,7 +29,7 @@ public class UserEntity implements Serializable {
 
 	@Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\." + "[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
 			+ "(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "{invalid.email}")
-	@Column(nullable = false, length = 80)
+	@Column(nullable = true, length = 80)
 	private String email;
 
 	@Column(nullable = false, length = 50)
