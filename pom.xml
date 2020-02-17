@@ -12,7 +12,7 @@
 	<groupId>ng.com.neodezigns.app.ws</groupId>
 	<artifactId>NEODezigns</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>NEODezigns</name>
 	<description>Web Services For NEO Dezigns</description>
 
