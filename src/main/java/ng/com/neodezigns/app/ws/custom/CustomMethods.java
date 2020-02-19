@@ -27,16 +27,13 @@ public class CustomMethods {
 		l.add(Integer.parseInt(str[0]));
 		l.add(Integer.parseInt(str[1]));
 		l.add(Integer.parseInt(str[2]));
-		System.out.println(l);
 		return l;
-
 	}
 	
 	public String generateUserName(UserEntity user) {
 		String userName = "";
 		String[] partName = user.getEmail().split("@");
 		userName += partName[0].trim();
-		//StringBuilder sb = new StringBuilder();
 		return userName;
 	}
 }

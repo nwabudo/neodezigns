@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,8 +55,22 @@ public class UserServiceImpl implements UserService {
 		return returnvalue;
 	}
 
-	public UserDTO createNewUser(UserDTO userDTO) {
+	@Override
+	public List<UserDTO> getUsers(int page, int limit) {
+		List<UserDTO> returnvalue = new ArrayList<>();
+		if (page > 0) page -= 1;
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		Page<UserEntity> usersPage = userRepo.findAll(pageableRequest);
+		List<UserEntity> users = usersPage.getContent();
+		for (UserEntity source : users) {
+			UserDTO target = new UserDTO();
+			BeanUtils.copyProperties(source, target);
+			returnvalue.add(target);
+		}
+		return returnvalue;
+	}
 
+	public UserDTO createNewUser(UserDTO userDTO) {
 		try {
 			UserEntity user = new UserEntity();
 			BeanUtils.copyProperties(userDTO, user);
@@ -67,7 +84,6 @@ public class UserServiceImpl implements UserService {
 			if (userRepo.findByUserName(userName) != null) {
 				userName += user.getFirstName().substring(0, 1).toUpperCase();
 			}
-
 			user.setUserName(userName);
 			if (userRepo.findByEmail(user.getEmail()) != null)
 				throw new UserServiceException(ErrorMessages.RECORD_ALREADY_EXISTS + " for: " + user.getEmail());
@@ -80,6 +96,25 @@ public class UserServiceImpl implements UserService {
 			log.info("Error is: " + ex.getMessage() + "/ " + ex.getConstraintViolations());
 			throw new RuntimeException("Email is not valid");
 		}
+	}
+
+	public UserDTO updateUser(UserDTO userDTO, String userId) {
+		UserDTO returnvalue = new UserDTO();
+		UserEntity userEntity = userRepo.findByUserId(userId);
+		if (userEntity == null)
+			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + " for: " + userId);
+		userEntity.setFirstName(userDTO.getFirstName());
+		userEntity.setLastName(userDTO.getLastName());
+		UserEntity updatedUser = userRepo.save(userEntity);
+		BeanUtils.copyProperties(updatedUser, returnvalue);
+		return returnvalue;
+	}
+
+	public void deleteUser(String userId) {
+		UserEntity userEntity = userRepo.findByUserId(userId);
+		if (userEntity == null)
+			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + " for: " + userId);
+		userRepo.delete(userEntity);
 	}
 
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
@@ -109,25 +144,5 @@ public class UserServiceImpl implements UserService {
 		UserDTO returnvalue = new UserDTO();
 		BeanUtils.copyProperties(userEntity, returnvalue);
 		return returnvalue;
-	}
-
-	public UserDTO updateUser(UserDTO userDTO, String userId) {
-		UserDTO returnvalue = new UserDTO();
-		UserEntity userEntity = userRepo.findByUserId(userId);
-		if (userEntity == null)
-			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + " for: " + userId);
-		userEntity.setFirstName(userDTO.getFirstName());
-		userEntity.setLastName(userDTO.getLastName());
-		UserEntity updatedUser = userRepo.save(userEntity);
-		BeanUtils.copyProperties(updatedUser, returnvalue);
-		return returnvalue;
-	}
-
-	@Override
-	public void deleteUser(String userId) {
-		UserEntity userEntity = userRepo.findByUserId(userId);
-		if (userEntity == null)
-			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + " for: " + userId);
-		userRepo.delete(userEntity);
 	}
 }

@@ -49,13 +49,11 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 					.getSubject();
 			
 			if (user != null) {
-				System.out.println("Finally Successfully Authenticated");
-				System.out.println(user);
+				log.info("Finally Successfully Authenticated");
 				log.info(user.toString());
 				return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
 			}
 		}
 		return null;
 	}
-
 }
