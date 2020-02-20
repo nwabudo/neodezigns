@@ -3,6 +3,8 @@ package ng.com.neodezigns.app.ws.ui.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,6 +30,9 @@ import ng.com.neodezigns.app.ws.ui.models.response.UserRest;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	
+	private ModelMapper modelMapper = new ModelMapper();
+	
 
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
@@ -63,11 +68,11 @@ public class UserController {
 		if (userRequest.getFirstName().isEmpty() || userRequest.getEmail().isEmpty()
 				|| userRequest.getPassword().isEmpty())
 			throw new UserServiceException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
-
-		UserDTO userDTO = new UserDTO();
-		BeanUtils.copyProperties(userRequest, userDTO);
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		UserDTO userDTO = modelMapper.map(userRequest, UserDTO.class);
 		UserDTO createdUser = userService.createNewUser(userDTO);
-		BeanUtils.copyProperties(createdUser, user);
+		user = modelMapper.map(createdUser, UserRest.class);
 		user.setDate(createdUser.getCreatedAt());
 		return user;
 	}

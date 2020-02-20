@@ -11,6 +11,6 @@ public class AppProperties {
 	private Environment env;
 	
 	public String getTokenSecret() {
-		return env.getProperty("tokenSecret");
+		return env.getProperty("tokensecret");
 	}
 }

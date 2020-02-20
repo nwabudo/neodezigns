@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +26,7 @@ import ng.com.neodezigns.app.ws.io.entity.UserEntity;
 import ng.com.neodezigns.app.ws.io.repositories.UserRepository;
 import ng.com.neodezigns.app.ws.service.UserService;
 import ng.com.neodezigns.app.ws.shared.Utils;
+import ng.com.neodezigns.app.ws.shared.dto.AddressDTO;
 import ng.com.neodezigns.app.ws.shared.dto.UserDTO;
 import ng.com.neodezigns.app.ws.ui.models.response.ErrorMessages;
 
@@ -58,7 +61,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<UserDTO> getUsers(int page, int limit) {
 		List<UserDTO> returnvalue = new ArrayList<>();
-		if (page > 0) page -= 1;
+		if (page > 0)
+			page -= 1;
 		Pageable pageableRequest = PageRequest.of(page, limit);
 		Page<UserEntity> usersPage = userRepo.findAll(pageableRequest);
 		List<UserEntity> users = usersPage.getContent();
@@ -72,25 +76,35 @@ public class UserServiceImpl implements UserService {
 
 	public UserDTO createNewUser(UserDTO userDTO) {
 		try {
-			UserEntity user = new UserEntity();
-			BeanUtils.copyProperties(userDTO, user);
-
-			String publicUserId = utils.generateUserId(15);
+			
+			if (userRepo.findByEmail(userDTO.getEmail()) != null)
+				throw new UserServiceException(ErrorMessages.RECORD_ALREADY_EXISTS + " for: " + userDTO.getEmail());
+			
+			String publicUserId = utils.generateId(15);
+			String publicAddressId = utils.generateId(10);
+			
+			for(int i= 0; i<userDTO.getAddresses().size(); i++) {
+				AddressDTO address = userDTO.getAddresses().get(i);
+				address.setUserDetails(userDTO);
+				address.setAddressId(publicAddressId);
+				userDTO.getAddresses().set(i, address);
+			}
+			ModelMapper modelMapper = new ModelMapper();
+			modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+			UserEntity user = modelMapper.map(userDTO, UserEntity.class);
 
 			user.setEncryptedPassword(bCryptPassword.encode(userDTO.getPassword()));
 			user.setUserId(publicUserId);
 			user.setEmailVerificationStatus(true);
+
 			String userName = customMethods.generateUserName(user);
 			if (userRepo.findByUserName(userName) != null) {
 				userName += user.getFirstName().substring(0, 1).toUpperCase();
 			}
 			user.setUserName(userName);
-			if (userRepo.findByEmail(user.getEmail()) != null)
-				throw new UserServiceException(ErrorMessages.RECORD_ALREADY_EXISTS + " for: " + user.getEmail());
 
 			UserEntity storedUserDetails = userRepo.save(user);
-			UserDTO returnValue = new UserDTO();
-			BeanUtils.copyProperties(storedUserDetails, returnValue);
+			UserDTO returnValue = modelMapper.map(storedUserDetails, UserDTO.class);
 			return returnValue;
 		} catch (ConstraintViolationException ex) {
 			log.info("Error is: " + ex.getMessage() + "/ " + ex.getConstraintViolations());

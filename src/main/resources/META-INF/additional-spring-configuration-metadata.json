@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "tokenSecret",
+    "type": "java.lang.String",
+    "description": "A description for 'tokenSecret'"
+  },
+  {
+    "name": "tokensecret",
+    "type": "java.lang.String",
+    "description": "A description for 'tokensecret'"
+  }
+]}

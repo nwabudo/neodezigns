@@ -1,6 +1,7 @@
 package ng.com.neodezigns.app.ws.ui.models.request;
 
 import java.util.Date;
+import java.util.List;
 
 public class UserRequestDetails {
 
@@ -9,6 +10,7 @@ public class UserRequestDetails {
 	private String email;
 	private String password;
 	private Date createdAt;
+	private List<AddressRequestModel> addresses;
 	
 
 	public String getFirstName() {
@@ -41,6 +43,12 @@ public class UserRequestDetails {
 	}
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+	public List<AddressRequestModel> getAddresses() {
+		return addresses;
+	}
+	public void setAddresses(List<AddressRequestModel> addresses) {
+		this.addresses = addresses;
 	}
 	
 }

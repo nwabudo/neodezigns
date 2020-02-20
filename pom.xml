@@ -13,7 +13,7 @@
 	<groupId>ng.com.neodezigns.app.ws</groupId>
 	<artifactId>NEODezigns</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>NEODezigns</name>
 	<description>Web Services For NEO Dezigns</description>
 
@@ -57,6 +57,11 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

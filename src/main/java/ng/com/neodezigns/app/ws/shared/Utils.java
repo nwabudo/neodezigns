@@ -12,7 +12,7 @@ public class Utils {
 	private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefgijklmnopqrstuvwxyz";
 	// private final int ITERATIONS = 10000; private final int KEY_LENGTH = 256;
 
-	public String generateUserId(int length) {
+	public String generateId(int length) {
 		return generateRandomString(length);
 	}
 

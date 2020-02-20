@@ -6,8 +6,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-@Entity
+@Entity(name="addresses")
 public class AddressEntity implements Serializable {
 
 	private static final long serialVersionUID = 4209374923046988553L;
@@ -15,18 +17,31 @@ public class AddressEntity implements Serializable {
 	@Id
 	@GeneratedValue
 	private long id;
+	
+	@Column(length=30, nullable = false)
+	private String addressId;
+	
+	@Column(length=100, nullable = false)
+	private String streetName;
+	
+	@Column(length=15, nullable = false)
+	private String city;
 
-	@Column(nullable = false)
-	private String addressName;
+	@Column(length=15, nullable = false)
+	private String state;
 
-	@Column(nullable = false)
-	private String addressCity;
+	@Column(length=15, nullable = false)
+	private String country;
 
-	@Column(nullable = false)
-	private String addressLocaleState;
+	@Column(length=7, nullable = false)
+	private String postalCode;
 
-	@Column(nullable = false)
-	private String addressCntry;
+	@Column(length=10, nullable = false)
+	private String type;
+	
+	@ManyToOne
+	@JoinColumn(name="users_id")
+	private UserEntity userDetails;
 
 	public long getId() {
 		return id;
@@ -36,36 +51,67 @@ public class AddressEntity implements Serializable {
 		this.id = id;
 	}
 
-	public String getAddressName() {
-		return addressName;
+	public String getAddressId() {
+		return addressId;
 	}
 
-	public void setAddressName(String addressName) {
-		this.addressName = addressName;
+	public void setAddressId(String addressId) {
+		this.addressId = addressId;
 	}
 
-	public String getAddressCity() {
-		return addressCity;
+	public UserEntity getUserDetails() {
+		return userDetails;
 	}
 
-	public void setAddressCity(String addressCity) {
-		this.addressCity = addressCity;
+	public void setUserDetails(UserEntity userDetails) {
+		this.userDetails = userDetails;
 	}
 
-	public String getAddressLocaleState() {
-		return addressLocaleState;
+	public String getStreetName() {
+		return streetName;
 	}
 
-	public void setAddressLocaleState(String addressLocaleState) {
-		this.addressLocaleState = addressLocaleState;
+	public void setStreetName(String streetName) {
+		this.streetName = streetName;
 	}
 
-	public String getAddressCntry() {
-		return addressCntry;
+	public String getCity() {
+		return city;
 	}
 
-	public void setAddressCntry(String addressCntry) {
-		this.addressCntry = addressCntry;
+	public void setCity(String city) {
+		this.city = city;
 	}
 
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getPostalCode() {
+		return postalCode;
+	}
+
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
 }

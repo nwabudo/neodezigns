@@ -2,11 +2,14 @@ package ng.com.neodezigns.app.ws.io.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Pattern;
 
 @Entity(name = "Users")
@@ -46,10 +49,8 @@ public class UserEntity implements Serializable {
 	@Column(nullable = false)
 	private Date createdAt;
 
-	/*
-	 * @OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL) private
-	 * List<AddressEntity> addresses;
-	 */
+	@OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
+	private List<AddressEntity> addresses;
 
 	public long getId() {
 		return id;
@@ -131,10 +132,12 @@ public class UserEntity implements Serializable {
 		this.createdAt = createdAt;
 	}
 
-	/*
-	 * public List<AddressEntity> getAddresses() { return addresses; }
-	 * 
-	 * public void setAddresses(List<AddressEntity> addresses) { this.addresses =
-	 * addresses; }
-	 */
+	public List<AddressEntity> getAddresses() {
+		return addresses;
+	}
+
+	public void setAddresses(List<AddressEntity> addresses) {
+		this.addresses = addresses;
+	}
+
 }

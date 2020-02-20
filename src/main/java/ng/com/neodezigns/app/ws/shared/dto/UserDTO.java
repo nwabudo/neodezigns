@@ -2,6 +2,7 @@ package ng.com.neodezigns.app.ws.shared.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class UserDTO implements Serializable {
 
@@ -17,7 +18,7 @@ public class UserDTO implements Serializable {
 	private String emailVerificationToken;
 	private Boolean emailVerificationStatus;
 	private Date createdAt;
-	// private List<AddressDTO> addresses;
+	private List<AddressDTO> addresses;
 
 	public long getId() {
 		return id;
@@ -106,9 +107,13 @@ public class UserDTO implements Serializable {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	/*
-	 * public List<AddressDTO> getAddresses() { return addresses; } public void
-	 * setAddresses(List<AddressDTO> addresses) { this.addresses = addresses; }
-	 */
+
+	public List<AddressDTO> getAddresses() {
+		return addresses;
+	}
+
+	public void setAddresses(List<AddressDTO> addresses) {
+		this.addresses = addresses;
+	}
 
 }

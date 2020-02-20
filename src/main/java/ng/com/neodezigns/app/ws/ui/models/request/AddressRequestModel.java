@@ -1,35 +1,13 @@
-package ng.com.neodezigns.app.ws.shared.dto;
+package ng.com.neodezigns.app.ws.ui.models.request;
 
-import java.io.Serializable;
+public class AddressRequestModel {
 
-public class AddressDTO implements Serializable {
-
-	private static final long serialVersionUID = 3689817129324519130L;
-	private long id;
-	private String addressId;
 	private String streetName;
 	private String city;
 	private String state;
 	private String country;
 	private String postalCode;
 	private String type;
-	private UserDTO userDetails;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getAddressId() {
-		return addressId;
-	}
-
-	public void setAddressId(String addressId) {
-		this.addressId = addressId;
-	}
 
 	public String getStreetName() {
 		return streetName;
@@ -79,11 +57,4 @@ public class AddressDTO implements Serializable {
 		this.type = type;
 	}
 
-	public UserDTO getUserDetails() {
-		return userDetails;
-	}
-
-	public void setUserDetails(UserDTO userDetails) {
-		this.userDetails = userDetails;
-	}
 }
