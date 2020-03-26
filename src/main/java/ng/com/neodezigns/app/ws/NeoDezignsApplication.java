@@ -1,5 +1,6 @@
 package ng.com.neodezigns.app.ws;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -16,7 +17,7 @@ public class NeoDezignsApplication extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(NeoDezignsApplication.class);
 	}
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(NeoDezignsApplication.class, args);
 	}
@@ -34,5 +35,15 @@ public class NeoDezignsApplication extends SpringBootServletInitializer {
 	@Bean(name = "AppProperties")
 	public AppProperties appProperties() {
 		return new AppProperties();
+	}
+
+	/*
+	 * @Bean public Module datatypeHibernateModule() { return new
+	 * Hibernate5Module(); }
+	 */
+	
+	@Bean
+	public ModelMapper modelMapper() {
+	    return new ModelMapper();
 	}
 }

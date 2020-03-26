@@ -23,12 +23,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import ng.com.neodezigns.app.ws.SpringApplicationContext;
-import ng.com.neodezigns.app.ws.service.UserService;
+import ng.com.neodezigns.app.ws.service.IUserService;
 import ng.com.neodezigns.app.ws.shared.dto.UserDTO;
 import ng.com.neodezigns.app.ws.ui.models.request.UserLoginRequestModel;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+	
 	private final AuthenticationManager authenticationManager;
+	
 	private static Logger log = LoggerFactory.getLogger(AuthenticationFilter.class);
 
 	public AuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -58,7 +60,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret()).compact();
 
-		UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+		IUserService userService = (IUserService) SpringApplicationContext.getBean("userServiceImpl");
 		UserDTO userDTO = userService.getUserByUserName(userName);
 
 		response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);

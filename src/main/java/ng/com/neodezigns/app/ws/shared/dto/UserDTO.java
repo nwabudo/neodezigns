@@ -1,6 +1,7 @@
 package ng.com.neodezigns.app.ws.shared.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,13 +13,14 @@ public class UserDTO implements Serializable {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String otherEmail;
 	private String userName;
 	private String password;
 	private String encryptedPassword;
 	private String emailVerificationToken;
 	private Boolean emailVerificationStatus;
 	private Date createdAt;
-	private List<AddressDTO> addresses;
+	private List<AddressDTO> addresses = new ArrayList<>();
 
 	public long getId() {
 		return id;
@@ -58,6 +60,14 @@ public class UserDTO implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getOtherEmail() {
+		return otherEmail;
+	}
+
+	public void setOtherEmail(String OtherEmail) {
+		otherEmail = OtherEmail;
 	}
 
 	public String getUserName() {

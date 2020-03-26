@@ -1,24 +1,26 @@
 package ng.com.neodezigns.app.ws.io.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Pattern;
 
-@Entity(name = "Users")
+@Entity(name = "users")
 public class UserEntity implements Serializable {
-
 	private static final long serialVersionUID = -2675537776836756234L;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
 	@Column(nullable = false)
@@ -35,6 +37,11 @@ public class UserEntity implements Serializable {
 	@Column(nullable = true, length = 80)
 	private String email;
 
+	@Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\." + "[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
+			+ "(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "{invalid.email}")
+	@Column(nullable = true, length = 80)
+	private String otherEmail;
+
 	@Column(nullable = false, length = 50)
 	private String userName;
 
@@ -49,8 +56,9 @@ public class UserEntity implements Serializable {
 	@Column(nullable = false)
 	private Date createdAt;
 
-	@OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
-	private List<AddressEntity> addresses;
+	// @JsonIgnore
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userDetails", cascade = CascadeType.ALL)
+	private List<AddressEntity> address = new ArrayList<>();
 
 	public long getId() {
 		return id;
@@ -90,6 +98,14 @@ public class UserEntity implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getOtherEmail() {
+		return otherEmail;
+	}
+
+	public void setOtherEmail(String OtherEmail) {
+		otherEmail = OtherEmail;
 	}
 
 	public String getUserName() {
@@ -133,11 +149,41 @@ public class UserEntity implements Serializable {
 	}
 
 	public List<AddressEntity> getAddresses() {
-		return addresses;
+		return address;
 	}
 
-	public void setAddresses(List<AddressEntity> addresses) {
-		this.addresses = addresses;
+	public void setAddresses(List<AddressEntity> address) {
+		this.address = address;
 	}
 
+	public UserEntity(long id, String userId, String firstName, String lastName,
+			@Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "{invalid.email}") String email,
+			@Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "{invalid.email}") String OtherEmail,
+			String userName, String encryptedPassword, String emailVerificationToken, Boolean emailVerificationStatus,
+			Date createdAt, List<AddressEntity> address) {
+		this.id = id;
+		this.userId = userId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		otherEmail = OtherEmail;
+		this.userName = userName;
+		this.encryptedPassword = encryptedPassword;
+		this.emailVerificationToken = emailVerificationToken;
+		this.emailVerificationStatus = emailVerificationStatus;
+		this.createdAt = createdAt;
+		this.address = address;
+	}
+
+	public UserEntity() {
+	}
+
+	@Override
+	public String toString() {
+		return "UserEntity [id=" + id + ", userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", email=" + email + ", OtherEmail=" + otherEmail + ", userName=" + userName + ", encryptedPassword="
+				+ encryptedPassword + ", emailVerificationToken=" + emailVerificationToken
+				+ ", emailVerificationStatus=" + emailVerificationStatus + ", createdAt=" + createdAt + ", address="
+				+ address + "]";
+	}
 }

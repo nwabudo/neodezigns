@@ -1,5 +1,6 @@
 package ng.com.neodezigns.app.ws.ui.models.request;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -8,10 +9,10 @@ public class UserRequestDetails {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String otherEmail;
 	private String password;
 	private Date createdAt;
-	private List<AddressRequestModel> addresses;
-	
+	private List<AddressRequestModel> addresses = new ArrayList<>();
 
 	public String getFirstName() {
 		return firstName;
@@ -30,6 +31,12 @@ public class UserRequestDetails {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getOtherEmail() {
+		return otherEmail;
+	}
+	public void setOtherEmail(String otherEmail) {
+		this.otherEmail = otherEmail;
 	}
 	public String getPassword() {
 		return password;

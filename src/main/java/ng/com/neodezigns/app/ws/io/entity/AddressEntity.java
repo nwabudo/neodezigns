@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,7 +16,7 @@ public class AddressEntity implements Serializable {
 	private static final long serialVersionUID = 4209374923046988553L;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
 	@Column(length=30, nullable = false)
@@ -36,7 +37,7 @@ public class AddressEntity implements Serializable {
 	@Column(length=7, nullable = false)
 	private String postalCode;
 
-	@Column(length=10, nullable = false)
+	@Column(length=15, nullable = false)
 	private String type;
 	
 	@ManyToOne
@@ -113,5 +114,28 @@ public class AddressEntity implements Serializable {
 
 	public void setCountry(String country) {
 		this.country = country;
+	}
+
+	public AddressEntity(long id, String addressId, String streetName, String city, String state, String country,
+			String postalCode, String type, UserEntity userDetails) {
+		this.id = id;
+		this.addressId = addressId;
+		this.streetName = streetName;
+		this.city = city;
+		this.state = state;
+		this.country = country;
+		this.postalCode = postalCode;
+		this.type = type;
+		this.userDetails = userDetails;
+	}
+	
+	public AddressEntity() {
+	}
+
+	@Override
+	public String toString() {
+		return "AddressEntity [id=" + id + ", addressId=" + addressId + ", streetName=" + streetName + ", city=" + city
+				+ ", state=" + state + ", country=" + country + ", postalCode=" + postalCode + ", type=" + type
+				+ ", userDetails=" + userDetails + "]";
 	}
 }

@@ -10,24 +10,29 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import ng.com.neodezigns.app.ws.service.UserService;
+import ng.com.neodezigns.app.ws.service.IUserService;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-	private final UserService userService;
+	private final IUserService userService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	private static Logger log = LoggerFactory.getLogger(WebSecurity.class);
 
-	public WebSecurity(UserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	public WebSecurity(IUserService userService, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.userService = userService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
-				.permitAll().anyRequest().authenticated().and().addFilter(getAuthenticationFilter())
+		http.csrf().disable().authorizeRequests()
+				.antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
+				.permitAll()
+				.antMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
+				.permitAll()
+				.anyRequest().authenticated()
+				.and().addFilter(getAuthenticationFilter())
 				.addFilter(new AuthorizationFilter(authenticationManager())).sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

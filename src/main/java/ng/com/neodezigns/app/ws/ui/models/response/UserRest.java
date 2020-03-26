@@ -12,7 +12,8 @@ public class UserRest {
 	private String firstName;
 	private String lastName;
 	private String userName;
-	private List<Integer> date = new ArrayList<>();
+	private List<Integer> createdAt = new ArrayList<>();
+	private List<AddressResponse> addresses;
 
 	public String getUserId() {
 		return userId;
@@ -46,11 +47,19 @@ public class UserRest {
 		this.userName = userName;
 	}
 
-	public List<Integer> getDate() {
-		return date;
+	public List<Integer> getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setDate(Date date) {
-		this.date = CustomMethods.parseDateToArray(date);
+	public void setDate(Date createdAt) {
+		this.createdAt = CustomMethods.parseDateToArray(createdAt);
+	}
+
+	public List<AddressResponse> getAddresses() {
+		return addresses;
+	}
+
+	public void setAddresses(List<AddressResponse> addresses) {
+		this.addresses = addresses;
 	}
 }
