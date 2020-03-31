@@ -73,7 +73,6 @@ public class UserServiceImpl implements IUserService {
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT).setFieldMatchingEnabled(true)
 				.setFieldAccessLevel(AccessLevel.PRIVATE)
 				.setSourceNamingConvention(NamingConventions.JAVABEANS_MUTATOR);
-
 		for (UserEntity source : users) {
 			returnvalue.add(modelMapper.map(source, UserDTO.class));
 		}
@@ -110,13 +109,12 @@ public class UserServiceImpl implements IUserService {
 		} catch (ConstraintViolationException ex) {
 			log.info("Error is: " + ex.getMessage() + "/ " + ex.getConstraintViolations());
 			throw new UserServiceException(
-					"Ensure the email address used are in lowercase such as this -> 'email@neodezign.com'"
-					);
+					"Ensure the email address used are in lowercase such as this -> 'email@neodezign.com'");
 		}
 	}
 
 	public void updateUser(UserDTO userDTO, String userId) {
-		//UserDTO returnvalue = new UserDTO();
+		// UserDTO returnvalue = new UserDTO();
 		UserEntity userEntity = userRepo.findByUserId(userId);
 		// modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		if (userEntity == null)
@@ -129,7 +127,7 @@ public class UserServiceImpl implements IUserService {
 		 * returnvalue;
 		 */
 	}
-	
+
 	public void updateUserName(UserDTO userDTO, String userId) {
 		UserEntity userEntity = userRepo.findByUserId(userId);
 		if (userEntity == null)
@@ -155,22 +153,21 @@ public class UserServiceImpl implements IUserService {
 		userRepo.delete(userEntity);
 	}
 
-	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		UserDetails userDetails = null;
-		UserEntity userEntity = userRepo.findByUserName(userName);
-		if (userEntity == null)
-			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + " for: " + userName);
-
-		userDetails = new User(userEntity.getUserName(), userEntity.getEncryptedPassword(), new ArrayList<>());
-		log.info(userDetails.toString() + "[" + userEntity.getUserName() + userEntity.getEncryptedPassword() + "]");
-
-		return userDetails;
-	}
-
 	public UserDTO getUserByUserName(String userName) {
 		UserEntity userEntity = userRepo.findByUserName(userName);
 		if (userEntity == null)
 			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + " for: " + userName);
+
+		UserDTO returnvalue = new UserDTO();
+		BeanUtils.copyProperties(userEntity, returnvalue);
+		// returnvalue = modelMapper.map(userEntity, UserDTO.class);
+		return returnvalue;
+	}
+
+	public UserDTO getUserByEmail(String email) {
+		UserEntity userEntity = userRepo.findByEmail(email);
+		if (userEntity == null)
+			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + " for: " + email);
 
 		UserDTO returnvalue = new UserDTO();
 		BeanUtils.copyProperties(userEntity, returnvalue);
@@ -188,4 +185,15 @@ public class UserServiceImpl implements IUserService {
 		return returnvalue;
 	}
 
+	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+		UserDetails userDetails = null;
+		UserEntity userEntity = userRepo.findByUserName(userName);
+		if (userEntity == null)
+			throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage() + " for: " + userName);
+
+		userDetails = new User(userEntity.getUserName(), userEntity.getEncryptedPassword(), new ArrayList<>());
+		log.info(userDetails.toString() + "[" + userEntity.getUserName() + userEntity.getEncryptedPassword() + "]");
+
+		return userDetails;
+	}
 }

@@ -10,6 +10,7 @@ public interface IUserService extends UserDetailsService {
 	UserDTO createNewUser(UserDTO userDTO);
 	UserDTO getUserByUserName(String userName);
 	UserDTO getUserByUserID(String userId);
+	UserDTO getUserByEmail(String email);
 	//List<UserDTO> getAllUsers();
 	void updateUser(UserDTO userDTO, String userId);
 	void updateUserName(UserDTO userDTO, String userId);
